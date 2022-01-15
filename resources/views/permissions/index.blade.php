@@ -13,7 +13,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/permission/home">Home</a></li>
               <li class="breadcrumb-item active">Permissions</li>
             </ol>
           </div><!-- /.col -->
@@ -27,7 +27,7 @@
           <div class="col-lg-10">
 
             <div class="pull-right">
-                @can('permission-create')
+                @can($arrayPermission['create'])
                 <a class="btn btn-success" href="{{ route('permissions.create') }}"> Create New Permission</a>
                 @endcan
             </div>
@@ -43,23 +43,28 @@
         <tr>
             <th>No</th>
             <th>Name</th>
+            <th>Http Uri</th>
             <th width="280px">Action</th>
         </tr>
 	    @foreach ($permissions as $permission)
 	    <tr>
 	        <td>{{ ++$i }}</td>
 	        <td>{{ $permission->name }}</td>
+            <td>{{ $permission->http_uri }}</td>
+
 	        <td>
                 <form action="{{ route('permissions.destroy',$permission->id) }}" method="POST">
+                    @can($arrayPermission['show'])
                     <a class="btn btn-info" href="{{ route('permissions.show',$permission->id) }}">Show</a>
-                    @can('permission-edit')
+                    @endcan
+                    @can($arrayPermission['edit'])
                     <a class="btn btn-primary" href="{{ route('permissions.edit',$permission->id) }}">Edit</a>
                     @endcan
 
-
+                    @can($arrayPermission['delete'])
                     @csrf
                     @method('DELETE')
-                    @can('permission-delete')
+                    
                     <button type="submit" class="btn btn-danger">Delete</button>
                     @endcan
                 </form>

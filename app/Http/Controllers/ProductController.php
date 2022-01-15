@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
     
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
     
 class ProductController extends Controller
 { 
@@ -12,12 +15,14 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     function __construct()
     {
-         $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:product-create', ['only' => ['create','store']]);
-         $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:GET::permission/products/create', ['only' => ['create','store']]);
+        $this->middleware('permission:GET::permission/products', ['only' => ['index']]);
+        $this->middleware('permission:GET::permission/products/{product}', ['only' => ['show']]);
+        $this->middleware('permission:GET::permission/products/{product}/edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:DELETE::permission/products/{product}', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -26,8 +31,20 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+        
         $products = Product::latest()->paginate(5);
-        return view('products.index',compact('products'))
+        return view('products.index',compact('products','arrayUser','arrayPermission','arrayProduct','arrayRole'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
@@ -38,7 +55,19 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        return view('products.create',compact('arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -68,7 +97,19 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        return view('products.show',compact('product','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -79,7 +120,19 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit',compact('product'));
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        return view('products.edit',compact('product','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**

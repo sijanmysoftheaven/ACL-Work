@@ -13,7 +13,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/permission/home">Home</a></li>
               <li class="breadcrumb-item active">Products</li>
             </ol>
           </div><!-- /.col -->
@@ -27,7 +27,7 @@
           <div class="col-lg-10">
 
             <div class="pull-right">
-                @can('product-create')
+                @can($arrayProduct['create'])
                 <a class="btn btn-success" href="{{ route('products.create') }}"> Create New Product</a>
                 @endcan
             </div>
@@ -53,15 +53,18 @@
 	        <td>{{ $product->detail }}</td>
 	        <td>
                 <form action="{{ route('products.destroy',$product->id) }}" method="POST">
+                    @can($arrayProduct['show'])
                     <a class="btn btn-info" href="{{ route('products.show',$product->id) }}">Show</a>
-                    @can('product-edit')
+                    @endcan
+
+                    @can($arrayProduct['edit'])
                     <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
                     @endcan
 
-
+                  @can($arrayProduct['delete'])
                     @csrf
                     @method('DELETE')
-                    @can('product-delete')
+                    
                     <button type="submit" class="btn btn-danger">Delete</button>
                     @endcan
                 </form>

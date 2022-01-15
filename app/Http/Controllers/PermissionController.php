@@ -15,10 +15,11 @@ class PermissionController extends Controller
      */
      function __construct()
     {
-         $this->middleware('permission:permission-list|permission-create|permission-edit|permission-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:permission-create', ['only' => ['create','store']]);
-         $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:GET::permission/permissions/create', ['only' => ['create','store']]);
+        $this->middleware('permission:GET::permission/permissions', ['only' => ['index']]);
+        $this->middleware('permission:GET::permission/permissions/{permission}', ['only' => ['show']]);
+        $this->middleware('permission:GET::permission/permissions/{permission}/edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:DELETE::permission/permissions/{permission}', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -27,8 +28,20 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $permissions = Permission::latest()->paginate(5);
-        return view('permissions.index',compact('permissions'))
+        return view('permissions.index',compact('permissions','arrayUser','arrayPermission','arrayProduct','arrayRole'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
@@ -39,9 +52,21 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        $routeAdmin = Route::getRoutes();
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
 
-        return view('permissions.create',compact('routeAdmin'));
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        $routeAdmin = Route::getRoutes();
+        
+        return view('permissions.create',compact('routeAdmin','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -55,8 +80,15 @@ class PermissionController extends Controller
         request()->validate([
             'name' => 'required',
         ]);
+
+        
+        $dataInsert = [
+            'name' => $request['name'],
+            'slug' => $request['slug'],
+            'http_uri' => implode('|', ($request['http_uri'] ?? [])),
+        ];
     
-        Permission::create($request->all());
+        Permission::create($dataInsert);
     
         return redirect()->route('permissions.index')
                         ->with('success','Permission created successfully.');
@@ -70,7 +102,19 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        return view('permissions.show',compact('permission'));
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        return view('permissions.show',compact('permission','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -81,7 +125,20 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        return view('permissions.edit',compact('permission'));
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
+        $routeAdmin = Route::getRoutes();
+        return view('permissions.edit',compact('permission','routeAdmin','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -96,11 +153,16 @@ class PermissionController extends Controller
          request()->validate([
             'name' => 'required',
         ]);
+          $dataInsert = [
+            'name' => $request['name'],
+            'slug' => $request['slug'],
+            'http_uri' => implode('|', ($request['http_uri'] ?? [])),
+        ];
     
-        $permission->update($request->all());
+        $permission->update($dataInsert);
     
         return redirect()->route('permissions.index')
-                        ->with('success','Permission updated successfully');
+        ->with('success','Permission updated successfully');
     }
     
     /**
@@ -114,6 +176,6 @@ class PermissionController extends Controller
         $permission->delete();
     
         return redirect()->route('permissions.index')
-                        ->with('success','Permission deleted successfully');
+        ->with('success','Permission deleted successfully');
     }
 }

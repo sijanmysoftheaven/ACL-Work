@@ -18,17 +18,32 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    function __construct()
+    
+    public function __construct()
     {
-         $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:user-create', ['only' => ['create','store']]);
-         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+            $this->middleware('permission:GET::permission/users/create', ['only' => ['create','store']]);
+            $this->middleware('permission:GET::permission/users', ['only' => ['index']]);
+            $this->middleware('permission:GET::permission/users/{user}', ['only' => ['show']]);
+            $this->middleware('permission:GET::permission/users/{user}/edit', ['only' => ['edit','update']]);
+            $this->middleware('permission:DELETE::permission/users/{user}', ['only' => ['destroy']]);
     }
+    
     public function index(Request $request)
     {
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $data = User::orderBy('id','DESC')->paginate(5);
-        return view('users.index',compact('data'))
+        return view('users.index',compact('data','arrayUser','arrayPermission','arrayProduct','arrayRole'))
             ->with('i', ($request->input('page', 1)-1)*5);
     }
     
@@ -39,8 +54,20 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        return view('users.create',compact('roles','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -76,8 +103,20 @@ class UserController extends Controller
      */
     public function show($id)
     {
+         $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $user = User::find($id);
-        return view('users.show',compact('user'));
+        return view('users.show',compact('user','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -88,11 +127,23 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+         $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
     
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit',compact('user','roles','userRole','arrayUser','arrayPermission','arrayProduct','arrayRole'));
     }
     
     /**
@@ -125,7 +176,7 @@ class UserController extends Controller
         $user->assignRole($request->input('roles'));
     
         return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        ->with('success','User updated successfully');
     }
     
     /**
@@ -138,13 +189,25 @@ class UserController extends Controller
     {
         User::find($id)->delete();
         return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+        ->with('success','User deleted successfully');
     }
     public function profile(Request $request)
     {
+        $this->call_middleware('users');
+        $arrayUser =$this->arr;
+
+        $this->call_middleware('products');
+        $arrayProduct =$this->arr;
+
+        $this->call_middleware('roles');
+        $arrayRole =$this->arr;
+
+        $this->call_middleware('permissions');
+        $arrayPermission =$this->arr;
+
         $id =Auth::user()->id;
         $user = User::find($id);
-        return view('users.profile',compact('user'));
+        return view('users.profile',compact('user','arrayUser','arrayPermission','arrayProduct','arrayRole'));
         
     }
 

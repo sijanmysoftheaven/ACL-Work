@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 @section('content')
 <!-- Content Wrapper. Contains page content -->
@@ -22,24 +21,29 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="content">
+    <div class="content" style="min-height: 470px;">
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-8">
             <div class="card">
               <div class="card-body">
-                @canany(['user-create','user-edit','user-list','user-delete'])
+
+                @canany([$arrayUser['create'],$arrayUser['index'],$arrayUser['edit'],$arrayUser['delete'],$arrayUser['show']])
                 <a href="{{ route('users.index') }}" class="card-link">User Management</a>
-                @endcanany
-                 @canany(['product-create','product-edit','product-list','product-delete'])
+                @endcanany()
+                
+                @canany([$arrayProduct['create'],$arrayProduct['index'],$arrayProduct['edit'],$arrayProduct['delete'],$arrayProduct['show']])
                 <a href="{{ route('products.index') }}" class="card-link">Product Management</a>
-                @endcanany
-                @canany(['role-create','role-edit','role-list','role-delete'])
+                @endcanany()
+                
+                @canany([$arrayRole['create'],$arrayRole['index'],$arrayRole['edit'],$arrayRole['delete'],$arrayRole['show']])
                 <a href="{{ route('roles.index') }}" class="card-link">Role Management</a>
-                @endcanany
-                @canany(['permission-create','permission-edit','permission-list','permission-delete'])
+                @endcanany()
+                
+                @canany([$arrayPermission['create'],$arrayPermission['index'],$arrayPermission['edit'],$arrayPermission['delete'],$arrayPermission['show']])
                 <a href="{{ route('permissions.index') }}" class="card-link">Permission Management</a>
-                @endcanany
+                @endcanany()
+                
               </div>
             </div>
           <!-- /.col-md-6 -->

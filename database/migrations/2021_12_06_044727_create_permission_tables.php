@@ -24,15 +24,16 @@ class CreatePermissionTables extends Migration
         if ($teams && empty($columnNames['team_foreign_key'] ?? null)) {
             throw new \Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
-
-        Schema::create($tableNames['permissions'], function (Blueprint $table) {
+            Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');       // For MySQL 8.0 use string('name', 125);
-            $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
+            $table->text('http_uri')->nullable();
+            
+            $table->string('slug', 50)->unique();
+            $table->string('guard_name');
             $table->timestamps();
-
-            $table->unique(['name']);
         });
+
+       
 
         Schema::create($tableNames['roles'], function (Blueprint $table) use ($teams, $columnNames) {
             $table->bigIncrements('id');

@@ -39,52 +39,48 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                @canany(['user-create','user-edit','user-list','user-delete'])
+                 @canany([$arrayUser['create'],$arrayUser['index'],$arrayUser['edit'],$arrayUser['delete'],$arrayUser['show']])
                 <a href="{{ route('users.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>User Management</p>
                 </a>
-                @endcanany
+                @endcanany()
               </li>
               <li class="nav-item">
-                @canany(['product-create','product-edit','product-list','product-delete'])
+                @canany([$arrayProduct['create'],$arrayProduct['index'],$arrayProduct['edit'],$arrayProduct['delete'],$arrayProduct['show']])
                 <a href="{{ route('products.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Product Management</p>
                 </a>
-                @endcanany
+                @endcanany()
               </li>
               <li class="nav-item">
-                @canany(['role-create','role-edit','role-list','role-delete'])
+                @canany([$arrayRole['create'],$arrayRole['index'],$arrayRole['edit'],$arrayRole['delete'],$arrayRole['show']])
                 <a href="{{ route('roles.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Role Management</p>
                 </a>
-                @endcanany
+                @endcanany()
               </li>
               <li class="nav-item">
-                @canany(['permission-create','permission-edit','permission-list','permission-delete'])
+                @canany([$arrayPermission['create'],$arrayPermission['index'],$arrayPermission['edit'],$arrayPermission['delete'],$arrayPermission['show']])
                 <a href="{{ route('permissions.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Permission Management</p>
                 </a>
-                @endcanany
+                @endcanany()
               </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
-             
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                
+             <a class="dropdown-item" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                {{ __('Logout') }}
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+              </form>                      
           </li>
         </ul>
       </nav>

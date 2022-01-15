@@ -3,6 +3,7 @@
 
 
 @section('content')
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -13,7 +14,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/permission/home">Home</a></li>
               <li class="breadcrumb-item active">Roles</li>
             </ol>
           </div><!-- /.col -->
@@ -27,9 +28,9 @@
           <div class="col-lg-10">
 
         <div class="pull-right">
-        @can('role-create')
+         @can($arrayRole['create'])
             <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a>
-            @endcan
+         @endcan
         </div>
 
 
@@ -52,15 +53,18 @@
         <td>{{ ++$i }}</td>
         <td>{{ $role->name }}</td>
         <td>
+          @can($arrayRole['show'])
             <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
-            @can('role-edit')
+          @endcan
+              @can($arrayRole['edit'])
                 <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-            @endcan
-            @can('role-delete')
+              @endcan
+              @can($arrayRole['delete'])
                 {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
+
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                 {!! Form::close() !!}
-            @endcan
+              @endcan
         </td>
     </tr>
     @endforeach

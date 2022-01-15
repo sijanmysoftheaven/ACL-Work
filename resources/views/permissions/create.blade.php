@@ -3,7 +3,7 @@
 
 
 @section('content')
-      <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -14,7 +14,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/permission/home">Home</a></li>
               <li class="breadcrumb-item active">Permissions</li>
               <li class="breadcrumb-item active">Create Permission</li>
             </ol>
@@ -48,34 +48,35 @@
     	@csrf
 
 
-         <div class="row">
+      <div class="row">
 		    <div class="col-xs-12 col-sm-12 col-md-12">
 		        <div class="form-group">
 		            <strong>Permission Name:</strong>
 		            <input type="text" name="name" class="form-control" placeholder="Name">
 		        </div>
 		    </div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Permissions:</strong>
-                <select class="form-control" multiple="multiple"> 
-                  
-                  @foreach ($routeAdmin as  $route)
-                  @if($route->getPrefix() == '/permission')
-                  <option value="{{ $route->uri() }}">{{$route->methods()[0].'::'.$route->uri()}}</option>
-                  @endif
-
-                  @endforeach
-
-                </select>
+                <strong>Slug:</strong>
+                <input type="text" name="slug" class="form-control" placeholder="Name">
             </div>
         </div>
-		    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+          <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Http Uri:</strong>
+                <select name="http_uri[]" class="form-control" multiple> 
+                  @foreach ($routeAdmin as  $route)
+                  @if($route->getPrefix() == 'permission' && ($route->methods()[0]=='GET' || $route->methods()[0]=='DELETE') )
+                    <option value="{{ $route->methods()[0].'::'.$route->uri() }}">{{$route->methods()[0].'::'.$route->uri()}}</option>
+                  @endif
+                  @endforeach
+                </select>
+            </div>
+          </div>
+		      <div class="col-xs-12 col-sm-12 col-md-12 text-center">
 		            <button type="submit" class="btn btn-primary">Submit</button>
-		    </div>
-		</div>
-
-
+		      </div>
+		  </div>
     </form>
 </div>
 </div>

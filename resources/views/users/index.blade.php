@@ -13,7 +13,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/permission/home">Home</a></li>
               <li class="breadcrumb-item active">users</li>
             </ol>
           </div><!-- /.col -->
@@ -26,7 +26,7 @@
           <div class="col-lg-10">
 
         <div class="pull-right">
-          @can('role-create')
+          @can($arrayUser['create'])
             <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
           @endcan
         </div>
@@ -61,11 +61,13 @@
         @endif
       </td>
       <td>
+        @can($arrayUser['show'])
         <a class="btn btn-info" href="{{ route('users.show',$user->id) }}">Show</a>
-        @can('user-edit')
+        @endcan
+        @can($arrayUser['edit'])
         <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
         @endcan
-        @can('user-delete')
+        @can($arrayUser['delete'])
           {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
               {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
           {!! Form::close() !!}
